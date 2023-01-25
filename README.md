@@ -22,4 +22,6 @@ Prediction of deaths in a Tesla car accident? Maybe a bit dark topic. -->
 ### Continous Groundwater Measurement -2023, current
 https://www.kaggle.com/datasets/alifarahmandfar/continuous-groundwater-level-measurements-2023
 It's a nicely explained dataset, big enough I guess. There a lot of feature on could predict for an explicit stage. Also a PCA could be a nice application here to find some key parameters for explaining trends in the data one would need to find beforehand. A bit more work I guess, maybe complex physical/reality context to understand...
-
+### Breast Cancer Wisconsin (Diagnostic) Data Set
+https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data
+Predict whether the cancer is benign or malignant. 32 Features computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image (such as radius, texture, symmetry,...).
