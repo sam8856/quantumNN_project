@@ -22,3 +22,6 @@ Prediction of coffee rating of a new coffee due to roasting/roaster-country/orig
 https://www.kaggle.com/datasets/thedevastator/global-fossil-co2-emissions-by-country-2002-2022
 Contains most of the emission data of a lot of countries from 2002 up to 2022
 We could make predictions for future emissions, don't know the work-intensity of getting this dataset in a proper ML-algorithm
+- Breast Cancer Wisconsin (Diagnostic) Data Set
+https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data
+Predict whether the cancer is benign or malignant. 32 Features computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image (such as radius, texture, symmetry,...).
