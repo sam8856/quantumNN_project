@@ -20,8 +20,11 @@ from tensorflow.keras.backend import clear_session
 
 #%%     
 #Load and split data
-np_data = np.load("qcp/physical-dataset-1/data.npy")
-df_data = pd.read_pickle("qcp/physical-dataset-1/data.pkl")
+#np_data = np.load("qcp/physical-dataset-1/data.npy")
+#df_data = pd.read_pickle("qcp/physical-dataset-1/data.pkl")
+np_data = np.load("data.npy")
+np_data = np.nan_to_num(np_data, nan=0.0)
+df_data = pd.read_pickle("data.pkl")
 powerOutput = np_data[:,-1].reshape(len(np_data),1)
 inputData   = np_data[:,0:20]
 x_train, x_test, y_train, y_test = train_test_split(inputData, powerOutput, test_size=0.33)
@@ -38,8 +41,8 @@ ann.summary()
 
 #%%
 #Training
-#losses = 'mean_squared_error', 'mean_absolute_error'
-ann.compile(optimizer = 'rmsprop', loss='mean_absolute_error', metrics=['accuracy', 'mean_squared_error', 'mean_absolute_error'])
+#losses = 'mean_squared_error', 'mean_absolute_error', 'mean_squared_logarithmic_error', 'mean_absolute_percentage_error'
+ann.compile(optimizer = 'rmsprop', loss='mean_absolute_percentage_error', metrics=['mean_squared_error', 'mean_absolute_error','mean_squared_logarithmic_error', 'mean_absolute_percentage_error'])
 ann_history = ann.fit(x_train, y_train, epochs=10, batch_size=5, validation_split=0.25)
 #%%
 #Plot definitions
@@ -58,4 +61,5 @@ plot_metrics(ann_history)
 #%%
 
 #Evaluation
-ann.evaluate(x_test, y_test)
+evaluation = ann.evaluate(x_test[:-1], y_test[:-1])
+plot_metrics(evaluation)
