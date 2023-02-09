@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Feb  9 10:38:58 2023
+
+@author: samuel
+"""
+
 #%%
 # #Import Scetion
 import numpy as np
@@ -9,7 +16,7 @@ from tensorflow import random as tf_random
 from tensorflow import split, concat
 from tensorflow.keras import Input, Model
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Normalization
+from tensorflow.keras.layers import Dense
 #Possible losses/metrics: MeanSquaredError, MeanRelativeError, MeanSquaredLogarithmicError, MeanAbsoluteError
 #from tensorflow.keras.metrics import Accuracy,  MeanSquaredError as acc, mse
 #from tensorflow.keras.metrics import MeanRelativeError, MeanAbsoluteError as mre, mae
@@ -32,25 +39,6 @@ x_train, x_test, y_train, y_test = train_test_split(inputData, powerOutput, test
 #%%
 #Create a simple ANN
 clear_session()
-
-#'Info over the data in each column'
-mins  = np_data.min(axis=0)
-maxs  = np_data.max(axis=0)
-means = np_data.mean(axis=0)
-varc  = np_data.var(axis=0)
-varcc = np.sqrt(varc)
-
-# Selfwritten Normalization 1
-np_data = np_data/(maxs-mins)
-# Selfwritten Normalization 2 ~ similar to keras Norm
-np_data = (np_data-means)/np.sqrt(varc)
-
-# #Normalization with keras ~ automatised
-# layerNorm = Normalization(axis=-1)
-# layerNorm.adapt(inputData)
-# inputData = layerNorm(inputData)
-# inputData = np.array(inputData)
-
 layer_1 = Dense(20, input_shape=(x_train.shape[1],), activation="linear")
 layer_2 = Dense(40, activation="relu")
 layer_3 = Dense(10, activation="selu")
@@ -82,4 +70,3 @@ plot_metrics(ann_history)
 #Evaluation
 evaluation = ann.evaluate(x_test[:-1], y_test[:-1])
 plot_metrics(evaluation)
-plot_model(ann)
