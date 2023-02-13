@@ -19,19 +19,12 @@ from tensorflow.keras.utils import plot_model, split_dataset
 from tensorflow.keras.backend import clear_session
 
 #%%     
-#Load and split data
+#Load data
 #np_data = np.load("qcp/physical-dataset-1/data.npy")
 #df_data = pd.read_pickle("qcp/physical-dataset-1/data.pkl")
 np_data = np.load("data.npy")
 np_data = np.nan_to_num(np_data, nan=0.0)
 df_data = pd.read_pickle("data.pkl")
-powerOutput = np_data[:,-1].reshape(len(np_data),1)
-inputData   = np_data[:,0:20]
-x_train, x_test, y_train, y_test = train_test_split(inputData, powerOutput, test_size=0.33)
-
-#%%
-#Create a simple ANN
-clear_session()
 
 #'Info over the data in each column'
 mins  = np_data.min(axis=0)
@@ -39,11 +32,20 @@ maxs  = np_data.max(axis=0)
 means = np_data.mean(axis=0)
 varc  = np_data.var(axis=0)
 varcc = np.sqrt(varc)
+print(f"mins: {mins} \n")
+print(f"maxs: {maxs} \n")
+print(f"means: {means} \n")
+print(f"varc: {varc} \n")
+print(f"varcc: {varcc} \n")
 
 # Selfwritten Normalization 1
 np_data = np_data/(maxs-mins)
-# Selfwritten Normalization 2 ~ similar to keras Norm
-np_data = (np_data-means)/np.sqrt(varc)
+predFact = (maxs[-1]-mins[-1])
+
+# # Selfwritten Normalization 2 ~ similar to keras Norm
+# np_data = (np_data-means)/np.sqrt(varc)
+# predFact = np.sqrt(varc[-1])
+# addFact  = means[-1]
 
 # #Normalization with keras ~ automatised
 # layerNorm = Normalization(axis=-1)
@@ -51,18 +53,27 @@ np_data = (np_data-means)/np.sqrt(varc)
 # inputData = layerNorm(inputData)
 # inputData = np.array(inputData)
 
+#Split data
+powerOutput = np_data[:,-1].reshape(len(np_data),1)
+inputData   = np_data[:,0:20]
+x_train, x_test, y_train, y_test = train_test_split(inputData, powerOutput, test_size=0.33)
+#%%
+
+
+#Create a simple ANN
+clear_session()
 layer_1 = Dense(20, input_shape=(x_train.shape[1],), activation="linear")
 layer_2 = Dense(40, activation="relu")
 layer_3 = Dense(10, activation="selu")
 layer_4 = Dense(1, activation="linear")
 ann = Sequential([layer_1, layer_2, layer_3, layer_4])
 ann.summary()
-
+plot_model(ann)
 #%%
 #Training
 #losses = 'mean_squared_error', 'mean_absolute_error', 'mean_squared_logarithmic_error', 'mean_absolute_percentage_error'
-ann.compile(optimizer = 'rmsprop', loss='mean_absolute_percentage_error', metrics=['mean_squared_error', 'mean_absolute_error','mean_squared_logarithmic_error', 'mean_absolute_percentage_error'])
-ann_history = ann.fit(x_train, y_train, epochs=10, batch_size=5, validation_split=0.25)
+ann.compile(optimizer = 'rmsprop', loss='mean_squared_error', metrics=['accuracy','mean_squared_error', 'mean_absolute_error','mean_squared_logarithmic_error', 'mean_absolute_percentage_error'])
+ann_history = ann.fit(x_train, y_train, epochs=50, batch_size=25, validation_split=0.25)
 #%%
 #Plot definitions
 def plot_metrics(history):
@@ -77,9 +88,10 @@ def plot_metrics(history):
         ax.set_xlabel("epoch", fontsize=16)
         ax.legend(fontsize=14)
 plot_metrics(ann_history)
+
+#Plot predicts?
+#Plot evalutaion?
 #%%
 
 #Evaluation
 evaluation = ann.evaluate(x_test[:-1], y_test[:-1])
-plot_metrics(evaluation)
-plot_model(ann)
