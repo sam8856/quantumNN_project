@@ -38,16 +38,16 @@ print(f"means: {means} \n")
 print(f"varc: {varc} \n")
 print(f"varcc: {varcc} \n")
 
-# Selfwritten Normalization 1
+# Range-scale
 np_data = np_data/(maxs-mins)
 predFact = (maxs[-1]-mins[-1])
 
-# # Selfwritten Normalization 2 ~ similar to keras Norm
+# # Z-scale
 # np_data = (np_data-means)/np.sqrt(varc)
 # predFact = np.sqrt(varc[-1])
 # addFact  = means[-1]
 
-# #Normalization with keras ~ automatised
+# #Normalization with keras
 # layerNorm = Normalization(axis=-1)
 # layerNorm.adapt(inputData)
 # inputData = layerNorm(inputData)
@@ -72,7 +72,7 @@ plot_model(ann)
 #%%
 #Training
 #losses = 'mean_squared_error', 'mean_absolute_error', 'mean_squared_logarithmic_error', 'mean_absolute_percentage_error'
-ann.compile(optimizer = 'rmsprop', loss='mean_squared_error', metrics=['accuracy','mean_squared_error', 'mean_absolute_error','mean_squared_logarithmic_error', 'mean_absolute_percentage_error'])
+ann.compile(optimizer = 'rmsprop', loss='mean_squared_error', metrics=['mean_squared_error', 'mean_absolute_error','mean_squared_logarithmic_error', 'mean_absolute_percentage_error'])
 ann_history = ann.fit(x_train, y_train, epochs=50, batch_size=25, validation_split=0.25)
 #%%
 #Plot definitions
@@ -89,7 +89,7 @@ def plot_metrics(history):
         ax.legend(fontsize=14)
 plot_metrics(ann_history)
 
-#Plot predicts?
+#Plot predicts? 
 #Plot evalutaion?
 #%%
 
