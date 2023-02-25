@@ -12,7 +12,8 @@ from sklearn import preprocessing as sp
 
 # load data in numpy array
 data = np.genfromtxt('data/airfoil_self_noise.dat')
-
+y = np.reshape(data[:,-1], (len(data),1))
+np.save('data/y.npy',y)
 # Print stochastic features of the data
 means = np.mean(data,axis=0)
 stds  = np.std(data, axis=0)
@@ -27,10 +28,11 @@ stochasticParamsRaw = np.array([means, stds, maxs, mins])
 
 # Range scale data and save fitting params for inverse transform
 rangeScaler = sp.MinMaxScaler()
-rangeScaler.fit(data)
+rangeScaler.fit(data[:,:-1])
 paramsRS = rangeScaler.get_params()
 np.save('data/paramsRS.npy',paramsRS)
-dataRS = rangeScaler.transform(data)
+dataRS = rangeScaler.transform(data[:,:-1])
+dataRS = np.concatenate((dataRS, y),axis=1)
 means = np.mean(dataRS,axis=0)
 stds  = np.std(dataRS, axis=0)
 maxs  = np.max(dataRS, axis=0)
@@ -39,10 +41,11 @@ stochasticParamsRS = np.array([means, stds, maxs, mins])
 
 # Standard scale data and save fitting params for inverse transform
 standardScaler = sp.StandardScaler()
-standardScaler.fit(data)
+standardScaler.fit(data[:,:-1])
 paramsStd = standardScaler.get_params()
 np.save('data/paramsStd.npy',paramsStd)
-dataStd = standardScaler.transform(data)
+dataStd = standardScaler.transform(data[:,:-1])
+dataStd = np.concatenate((dataStd, y),axis=1)
 means = np.mean(dataStd,axis=0)
 stds  = np.std(dataStd, axis=0)
 maxs  = np.max(dataStd, axis=0)
