@@ -8,6 +8,7 @@ Created on Thu Feb 23 10:08:42 2023
 # -----------------------------
 import numpy as np
 from sklearn import preprocessing as sp
+from sklearn.decomposition import PCA
 # -----------------------------
 
 # load data in numpy array
@@ -51,14 +52,27 @@ stds  = np.std(dataStd, axis=0)
 maxs  = np.max(dataStd, axis=0)
 mins  = np.min(dataStd, axis=0)
 stochasticParamsStd = np.array([means, stds, maxs, mins])
+
+# PCA reduced data, currently using range scale data
+latent_dim = 3
+pca = PCA(n_components=latent_dim,)
+dataPcaRS = pca.fit_transform(dataRS[:,:-1])
+dataPcaRS = np.concatenate((dataPcaRS, y),axis=1)
+means = np.mean(dataPcaRS,axis=0)
+stds  = np.std(dataPcaRS, axis=0)
+maxs  = np.max(dataPcaRS, axis=0)
+mins  = np.min(dataPcaRS, axis=0)
+stochasticParamsPcaRS = np.array([means, stds, maxs, mins])
 # -----------------------------
 
 # Save all dataset
 np.save('data/rawData.npy',data)
 np.save('data/dataRS.npy', dataRS)
 np.save('data/dataStd.npy',dataStd)
+np.save('data/dataPcaRS.npy',dataPcaRS)
 
 # Save all stochastic parameters
 np.save('data/stochasticParamsRaw.npy',stochasticParamsRaw)
 np.save('data/stochasticParamsRS.npy',stochasticParamsRS)
 np.save('data/stochasticParamsStd.npy',stochasticParamsStd)
+np.save('data/stochasticParamsPcaRS.npy',stochasticParamsPcaRS)
